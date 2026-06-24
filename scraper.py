@@ -30,7 +30,7 @@ SUPABASE_KEY = os.environ["SUPABASE_SERVICE_KEY"]  # sb_secret_... (nie publisha
 ANTHROPIC_KEY = os.environ["ANTHROPIC_API_KEY"]
 
 CITY = "Rajec"
-BASE_URL = "https://rajec.sk"
+BASE_URL = "https://www.rajec.sk"
 
 HEADERS = {
     "User-Agent": (
@@ -99,7 +99,7 @@ def ask_claude(prompt: str) -> dict:
 # ── Scraper: Aktuality ────────────────────────────────────────────────────────
 def scrape_news():
     log.info("Scraping aktuality...")
-    html = fetch(f"{BASE_URL}/aktuality")
+    html = fetch(f"{BASE_URL}/news/aktuality")
     if not html:
         return
 
@@ -184,10 +184,9 @@ def scrape_events():
 
     # Skús sekciu podujatí/kultúry
     urls_to_try = [
-        f"{BASE_URL}/podujatia",
-        f"{BASE_URL}/kultúra",
-        f"{BASE_URL}/sport-a-kultura",
-        f"{BASE_URL}",  # hlavná stránka má preview podujatí
+        f"{BASE_URL}/news/aktuality",       # aktuality obsahujú aj podujatia
+        f"{BASE_URL}/news/uradna-tabula",   # úradná tabuľa
+        f"{BASE_URL}",                       # hlavná stránka má preview podujatí
     ]
 
     html = None
@@ -272,10 +271,9 @@ def scrape_waste():
     except Exception:
         pass
 
-    html = fetch(f"{BASE_URL}/odpady")
+    html = fetch(f"{BASE_URL}/obcan/zivotne-prostredie-a-vystavba/odpady")
     if not html:
-        # Skús alternatívne URL
-        html = fetch(f"{BASE_URL}/zivotne-prostredie/odpady")
+        html = fetch(f"{BASE_URL}/odpady")
     if not html:
         log.warning("Stránka odpadov nenájdená")
         return
